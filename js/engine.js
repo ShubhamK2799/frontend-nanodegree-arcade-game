@@ -22,10 +22,12 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime, lives=5,score=0,finish=false,
+        pannel = document.getElementById('pannel');
+        modal  = document.getElementById('modal');
 
-    canvas.width = 505;
-    canvas.height = 606;
+    canvas.width = 707;
+    canvas.height = 707;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -44,28 +46,30 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
+        if(finish) return;
         update(dt);
         render();
-
+        
         /* Set our lastTime variable which is used to determine the time delta
-         * for the next time this function is called.
-         */
-        lastTime = now;
-
-        /* Use the browser's requestAnimationFrame function to call this
-         * function again as soon as the browser is able to draw another frame.
-         */
-        win.requestAnimationFrame(main);
+        * for the next time this function is called.
+        */
+       lastTime = now;
+       
+       /* Use the browser's requestAnimationFrame function to call this
+       * function again as soon as the browser is able to draw another frame.
+       */
+      win.requestAnimationFrame(main);
     }
-
+    
     /* This function does some initial setup that should only occur once,
-     * particularly setting the lastTime variable that is required for the
-     * game loop.
-     */
-    function init() {
-        reset();
-        lastTime = Date.now();
-        main();
+    * particularly setting the lastTime variable that is required for the
+    * game loop.
+    */
+   function init() {
+       modal.style='display:none';
+       reset();
+       lastTime = Date.now();
+       main();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -79,7 +83,41 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisons();
+        checkWin();
+        if(lives==0)  {
+            finish=true;
+            modal.style="display:block";
+            modal.innerHTML=`Game Over <br> Your final Score is ${score} <br> Press any key to restart`;
+            document.addEventListener('keydown',resetboard);
+        }
+        else pannel.innerHTML=`<h5>Score: ${score}</h5><h5>Lives: ${lives} </h5>`;
+    }
+
+    function resetboard(){
+        modal.style="display:none";
+        finish=false;
+        score=0;
+        lives=5;
+        main();
+        document.removeEventListener('keydown',resetboard);
+    }
+
+    function checkCollisons(){
+        for(let i=0; i<allEnemies.length;i++){
+            if(Math.abs(allEnemies[i].x-player.x)<50 && Math.abs(allEnemies[i].y-player.y)<50){
+                lives--;
+                reset();
+                console.log("COLLISION DETECTED!");
+            }
+        }
+    }
+
+    function checkWin(){
+        if(player.y<0){
+            score++;
+            player.reset();
+        }
     }
 
     /* This is called by the update function and loops through all of the
@@ -108,23 +146,19 @@ var Engine = (function(global) {
          */
         var rowImages = [
                 'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
+                'images/stone-block.png',   // Row 1 of 5 of stone
+                'images/stone-block.png',   // Row 2 of 5 of stone
+                'images/stone-block.png',   // Row 3 of 5 of stone
+                'images/stone-block.png',   // Row 3 of 5 of stone
+                'images/stone-block.png',   // Row 3 of 5 of stone
+                'images/grass-block.png',    // Row 2 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = 7,
+            numCols = 7,
             row, col;
         
-        // Before drawing, clear existing canvas
         ctx.clearRect(0,0,canvas.width,canvas.height)
-
-        /* Loop through the number of rows and columns we've defined above
-         * and, using the rowImages array, draw the correct image for that
-         * portion of the "grid"
-         */
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
@@ -141,14 +175,7 @@ var Engine = (function(global) {
         renderEntities();
     }
 
-    /* This function is called by the render function and is called on each game
-     * tick. Its purpose is to then call the render functions you have defined
-     * on your enemy and player entities within app.js
-     */
     function renderEntities() {
-        /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
-         */
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -156,12 +183,8 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
     function reset() {
-        // noop
+        player.reset();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -183,3 +206,4 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+

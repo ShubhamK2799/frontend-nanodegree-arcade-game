@@ -1,3 +1,38 @@
 body {
     text-align: center;
+    color:white;
+    font-size: 2em;
+}
+canvas{
+    margin-top:-20px;
+}
+html{
+    background: purple;
+}
+#pannel{
+    padding-left:40px;
+    position: absolute;
+    font-family: fantasy;
+}
+#modal{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top:20%;
+    margin-left:25%;
+    width:50%;
+    padding:2%;
+    box-sizing: border-box;
+    border-radius:5px;
+    box-shadow:0 0 50px black ;
+    background:blue;
+    position:fixed;
+}
+button{
+    font-family: cursive;
+    color:white;
+    padding:30px;
+    font-size:0.8em;
+    width:50%;
+    border: none;
+    border-radius: 20px;
+    background:rgb(100, 32, 5);
 }
