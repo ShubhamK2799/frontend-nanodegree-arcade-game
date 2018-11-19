@@ -22,10 +22,13 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        // initializing the game data
         lastTime, lives=5,score=0,finish=false,
+        // grabbing the pannel and the modal elements
         pannel = document.getElementById('pannel');
         modal  = document.getElementById('modal');
 
+    // adjusting the canvas size
     canvas.width = 707;
     canvas.height = 707;
     doc.body.appendChild(canvas);
@@ -66,6 +69,7 @@ var Engine = (function(global) {
     * game loop.
     */
    function init() {
+       // setting the modal display to none 
        modal.style='display:none';
        reset();
        lastTime = Date.now();
@@ -85,15 +89,18 @@ var Engine = (function(global) {
         updateEntities(dt);
         checkCollisons();
         checkWin();
+        // if there is no life remaining then display the final score
         if(lives==0)  {
             finish=true;
             modal.style="display:block";
             modal.innerHTML=`Game Over <br> Your final Score is ${score} <br> Press any key to restart`;
             document.addEventListener('keydown',resetboard);
         }
+        // update the pannel to display current score
         else pannel.innerHTML=`<h5>Score: ${score}</h5><h5>Lives: ${lives} </h5>`;
     }
 
+    // reseting the board, scores and the lives 
     function resetboard(){
         modal.style="display:none";
         finish=false;
@@ -103,6 +110,7 @@ var Engine = (function(global) {
         document.removeEventListener('keydown',resetboard);
     }
 
+    // check if there is a collision between the player and the enemy
     function checkCollisons(){
         for(let i=0; i<allEnemies.length;i++){
             if(Math.abs(allEnemies[i].x-player.x)<50 && Math.abs(allEnemies[i].y-player.y)<50){
@@ -113,6 +121,7 @@ var Engine = (function(global) {
         }
     }
 
+    // to check if the player has won and increase the score if he has
     function checkWin(){
         if(player.y<0){
             score++;
@@ -149,9 +158,9 @@ var Engine = (function(global) {
                 'images/stone-block.png',   // Row 1 of 5 of stone
                 'images/stone-block.png',   // Row 2 of 5 of stone
                 'images/stone-block.png',   // Row 3 of 5 of stone
-                'images/stone-block.png',   // Row 3 of 5 of stone
-                'images/stone-block.png',   // Row 3 of 5 of stone
-                'images/grass-block.png',    // Row 2 of 2 of grass
+                'images/stone-block.png',   // Row 4 of 5 of stone
+                'images/stone-block.png',   // Row 5 of 5 of stone
+                'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
             numRows = 7,
@@ -175,6 +184,7 @@ var Engine = (function(global) {
         renderEntities();
     }
 
+    // render all the enteties
     function renderEntities() {
         allEnemies.forEach(function(enemy) {
             enemy.render();
@@ -183,6 +193,7 @@ var Engine = (function(global) {
         player.render();
     }
 
+    // reset the player position to starting point
     function reset() {
         player.reset();
     }

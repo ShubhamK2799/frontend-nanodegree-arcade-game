@@ -1,6 +1,8 @@
-frontend-nanodegree-arcade-game
-===============================
+# Classic Arcade Game
+This is a project made under my Udacity Front End nanodegree program.. In order to play this game, simply run the index.html file on the browser 
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
-
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+# How to Play?
+1. Use arrow keys to move your character
+2. Crossing the board successfully increases your points
+3. You are given 5 chances(lives) to cross the board in one game
+4. Colliding with the enemy reduces your lives by one and repositions the character to the starting point
